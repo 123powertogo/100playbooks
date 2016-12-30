@@ -1,0 +1,10 @@
+---
+# Handler to handle DB tier notifications
+
+- name: restart mysql
+  service: name=mysqld state=restarted
+
+- name: restart iptables
+  service: name=iptables state=restarted
+
+##所有任务完成后，重启mysql和iptables

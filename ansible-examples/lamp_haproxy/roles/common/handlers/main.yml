@@ -1,0 +1,9 @@
+---
+# Handlers for common notifications
+
+- name: restart ntp
+  service: name=ntpd state=restarted
+
+- name: restart iptables
+  service: name=iptables state=restarted
+##任务完成后，重启ntp和 iptables 服务

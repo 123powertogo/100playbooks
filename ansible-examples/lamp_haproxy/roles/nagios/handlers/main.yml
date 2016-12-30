@@ -1,0 +1,10 @@
+---
+# handlers for nagios
+- name: restart httpd
+  service: name=httpd state=restarted
+
+- name: restart nagios
+service: name=nagios state=restarted
+
+
+##任务完成后重启nagios和apache

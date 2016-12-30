@@ -1,0 +1,24 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Install ntp
+  yum: name=ntp state=present
+  tags: ntp
+##yum安装ntp服务软件
+
+- name: Configure ntp file
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  tags: ntp
+  notify: restart ntp
+##修改ntp服务配置文件后重启服务
+
+- name: Start the ntp service
+  service: name=ntpd state=started enabled=yes
+  tags: ntp
+##启动ntp服务并设置开机启动
+
+- name: test to see if selinux is running
+  command: getenforce
+  register: sestatus
+  changed_when: false
+##查看selinux状态，并存到sestatus变量中

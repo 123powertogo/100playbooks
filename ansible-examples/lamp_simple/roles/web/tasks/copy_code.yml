@@ -1,0 +1,11 @@
+---
+# These tasks are responsible for copying the latest dev/production code from
+# the version control system.
+
+- name: Copy the code from repository
+  git: repo={{ repository }} dest=/var/www/html/
+
+##下载变量库中代码发布到远程主机/var/www/html/
+- name: Creates the index.php file
+  template: src=index.php.j2 dest=/var/www/html/index.php
+##修改创建远程主机index.php文件

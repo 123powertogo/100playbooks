@@ -1,0 +1,14 @@
+---
+# This playbook deploys a simple standalone Tomcat 7 server.
+
+- hosts: tomcat-servers
+  remote_user: root
+  become: yes
+  become_method: sudo
+
+  roles:
+    - selinux
+    - tomcat
+
+
+###这是入口palybook,表示以root身份登陆主机组tomcat-sersers,可以使用sudo,最终执行selinux和tomcat两个角色

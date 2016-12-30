@@ -1,0 +1,30 @@
+---
+# This role will install MySQL and create db user and give permissions.
+
+- name: Install Mysql package
+  yum: name={{ item }} state=present
+  with_items:
+   - mysql-server
+   - MySQL-python
+##yum安装mysql
+- name: Configure SELinux to start mysql on any port
+  seboolean: name=mysql_connect_any state=true persistent=yes
+  when: sestatus.rc != 0
+##设置selinux放松mysql
+- name: Create Mysql configuration file
+  template: src=my.cnf.j2 dest=/etc/my.cnf
+  notify:
+  - restart mysql
+##修改mysql配置文件后，重启
+
+- name: Start Mysql Service
+  service: name=mysqld state=started enabled=yes
+##启动mysql,并设置开机启动
+
+- name: Create Application Database
+  mysql_db: name={{ dbname }} state=present
+##创建库
+
+- name: Create Application DB User
+  mysql_user: name={{ dbuser }} password={{ upassword }} priv=*.*:ALL host='%' state=present
+##创建访问数据库的用户 密码 ，以及给予的权限控制

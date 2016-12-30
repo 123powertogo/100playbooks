@@ -1,0 +1,10 @@
+---
+# This playbook deploys a simple standalone JBoss server.
+
+- hosts: all
+
+  roles:
+    - jboss-standalone
+    
+
+####通过执行角色jboss-standalone完成服务器的配备和运行

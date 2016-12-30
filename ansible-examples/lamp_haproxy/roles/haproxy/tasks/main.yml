@@ -1,0 +1,14 @@
+---
+# This role installs HAProxy and configures it.
+
+- name: Download and install haproxy
+  yum: name=haproxy state=present
+##yum安装代理软件haproxy
+- name: Configure the haproxy cnf file with hosts
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+##修改haproxy配置文件，后重启
+
+- name: Start the haproxy service
+  service: name=haproxy state=started enabled=yes
+##启动haproxy服务

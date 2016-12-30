@@ -1,0 +1,44 @@
+---
+# This will install nagios
+
+- name: install nagios
+  yum: pkg={{ item }} state=present
+  with_items:
+   - nagios
+   - nagios-plugins
+   - nagios-plugins-nrpe
+   - nagios-plugins-ping
+   - nagios-plugins-ssh
+   - nagios-plugins-http
+   - nagios-plugins-mysql
+   - nagios-devel
+  notify: restart httpd
+##安装nagios监控及其插件
+- name: create nagios config dir
+  file: path=/etc/nagios/ansible-managed state=directory
+##创建nagios配置文件目录
+
+- name: configure nagios
+  copy: src=nagios.cfg dest=/etc/nagios/nagios.cfg
+  notify: restart nagios
+##创建nagios配置文件，后启动服务
+
+- name: configure localhost monitoring
+  copy: src=localhost.cfg dest=/etc/nagios/objects/localhost.cfg
+  notify: restart nagios
+##配置本机的监控配置，然后重启nagios
+- name: configure nagios services
+  copy: src=ansible-managed-services.cfg dest=/etc/nagios/
+##配置远程主机nagios
+- name: create the nagios object files
+  template: src={{ item + ".j2" }}
+            dest=/etc/nagios/ansible-managed/{{ item }}
+  with_items:
+    - webservers.cfg
+    - dbservers.cfg
+    - lbservers.cfg
+  notify: restart nagios
+##创建nagios监控项的配置文件
+- name: start nagios
+  service: name=nagios state=started enabled=yes
+##启动nagios服务，并设置开机启动
